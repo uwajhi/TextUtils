@@ -3,6 +3,7 @@ import React, {useState} from 'react'
 const TextForm = (props) => {
     const [text, setText] = useState('');
     const [findText, setFindText] = useState('');
+    const [length, setLength] = useState(0);
 
     const handleUpClick = () => {
         setText(text.toUpperCase());
@@ -14,10 +15,21 @@ const TextForm = (props) => {
 
     }
     const handleOnChange = (event) => {
-        setText(event.target.value);
+        const newText = event.target.value; 
+        setText(newText);
+        setLength(calculteWords(newText));
+
+    }
+    const calculteWords = (newText) => {
+        const words = newText.split(/\s+/);
+        const properWords = words.filter(word => word.length > 0)
+        return properWords.length;
+
     }
     const handleClearClick = () => {
         setText('');
+        setFindText('');
+        setLength(0);
         props.showAlert("Text has been Cleared", "success");
 
     }
@@ -70,7 +82,7 @@ const TextForm = (props) => {
         </div>
         <div className="container my-3" style={{color: props.mode === 'light' ? '#042743' : 'white'}}>
             <h2>Your text summary</h2>
-            <p>{text.length === 0 ? '0' : text.split(' ').length} words, {text.length} characters</p>
+            <p>{length} words, {text.length} characters</p>
             <p>{text.length === 0 ? '0' : text.split(' ').length * 0.008} Minutes read</p>
             <h2>{text.length === 0 ? '' : 'Preview'}</h2>
             <p>{text}</p>
